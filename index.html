@@ -9,9 +9,21 @@
 
     <script type="text/javascript" src="./js/jquery.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/config.js"></script>
     <script type="text/javascript" src="./js/scripts.js"></script>
 </head>
 <body>
+
+    <form id="weather-form">
+        <label>Enter a zipcode.</label>
+        <input type="text" id="zip-code" placeholder="Zip Code">
+        <button  class="btn btn-primary" type="submit">Submit</button>
+    </form>
+
+    <div class="col-sm-12" id="temp-info">
+
+
+    </div>
 
     <canvas id="weather-canvas" height="500px" width="500px">
         <!--put weather widget arc here-->

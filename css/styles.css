@@ -1,6 +1,11 @@
-.today{
-    display: inline-block;
+.forecast{
+    border: 1px solid gray;
+    background: linear-gradient(white, #bde9f8);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+
 }
-.tomorrow{
-    display: inline-block;
+
+.today, .day-1, .day-2, .day-3{
+    border-right: none;
 }

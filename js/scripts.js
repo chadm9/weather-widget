@@ -15,11 +15,11 @@ $(document).ready(function () {
         var callTime = new Date(data.list[0].dt*1000);
         var currentDescription = data.list[0].weather[0].description;
         //console.log(currentDescription);
-        $('#today-description').html(currentDescription);
+        $('#today-description').html(currentDescription.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();}));
         var currentIcon = '<img src="http://openweathermap.org/img/w/' + data.list[0].weather[0].icon + '.png">';
         $('#today-icon').html(currentIcon);
         var currentTemp = Math.round(data.list[0].main.temp);
-        $('#today-temp').html(currentTemp);
+        $('#today-temp').html(currentTemp + '\xB0');
 
 
 
@@ -27,11 +27,11 @@ $(document).ready(function () {
             var forecast = getForecast(i);
             //console.log(forecast1);
 
-            $('#day-' + i).html(forecast.day);
+            $('#day-' + i).html('<b>' + forecast.day + '</b>');
             $('#day-' + i + '-description').html(forecast.overview);
             $('#day-' + i + '-icon').html(forecast.pic);
-            $('#day-' + i + '-high').append(forecast.high);
-            $('#day-' + i + '-low').append(forecast.low);
+            $('#day-' + i + '-high').append(forecast.high + '\xB0');
+            $('#day-' + i + '-low').append(forecast.low + '\xB0');
 
         }
 

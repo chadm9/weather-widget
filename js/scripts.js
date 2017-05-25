@@ -4,15 +4,141 @@ $(document).ready(function () {
 
     const weatherAPI = 'http://api.openweathermap.org/data/2.5/weather';
 
-    var date = new Date(1485799200*1000);
-    console.log(date.toJSON());
-    var call =  'http://api.openweathermap.org/data/2.5/forecast?lat=33.449339&lon=-83.26209' + '&units=imperial&appid=' + apiKey;
-    console.log(call);
 
-    console.log(date.getTimezoneOffset());
+
+    var call =  'http://api.openweathermap.org/data/2.5/forecast?lat=33.449339&lon=-83.26209' + '&units=imperial&appid=' + apiKey;
+
 
     $.getJSON(call, function (data) {
         console.log(data);
+
+        var callTime = new Date(data.list[0].dt*1000);
+        var currentDate = callTime.getDate();
+        console.log(callTime.toLocaleDateString());
+        console.log(callTime.toLocaleTimeString());
+        console.log(callTime.getDate());
+        console.log(callTime.getHours());
+        var currentDescription = data.list[0].weather[0].description;
+        console.log(currentDescription);
+        $('#today-description').html(currentDescription);
+        var currentIcon = '<img src="http://openweathermap.org/img/w/' + data.list[0].weather[0].icon + '.png">';
+        $('#today-icon').html(currentIcon);
+        var currentTemp = Math.round(data.list[0].main.temp);
+        $('#today-temp').html(currentTemp);
+
+
+        var maxTemp = -1000;
+        var minTemp = 1000;
+        var numberOfForecasts = 0;
+        var totalRain = 0;
+        var totalClouds = 0;
+        var description;
+        var weatherIcon ='<img src="http://openweathermap.org/img/w/';
+        var descriptionIcon = {sunny: '01d.png', mostlySunny: '01d.png', partlyCloudy: '02d.png', cloudy: '04d.png',
+            lightRain: '10d.png', rain: '10d.png', heavyRain: '09d.png'};
+        var day;
+
+        for(var i = 0; i < data.list.length; i++){
+            var forecastTime = new Date(data.list[i].dt*1000);
+            console.log(data.list[i].rain['3h']);
+            //console.log(forcastTime.getDate());
+            //console.log(callTime.getDate() + 1);
+            if((forecastTime.getDate() === callTime.getDate() + 1)  && (forecastTime.getHours() <= 16) &&
+                (forecastTime.getHours() >= 6)){
+                //console.log(data.list[i].main.temp);
+                numberOfForecasts++;
+                if(data.list[i].main.temp > maxTemp){
+                    maxTemp = data.list[i].main.temp
+                }
+                if(data.list[i].main.temp < minTemp){
+                    minTemp = data.list[i].main.temp
+                }
+                if(data.list[i].rain['3h'] != undefined){
+                    totalRain += data.list[i].rain['3h'];
+                }
+                totalClouds += data.list[i].clouds.all;
+
+
+            }
+        }
+
+        if(totalRain/numberOfForecasts/3 >= 7.874){
+            description = 'Heavy Rain';
+        }else if(totalRain/numberOfForecasts/3 < 7.874 && totalRain/numberOfForecasts/3 >= 2.794){
+            description = 'Rain';
+        }else if((totalRain/numberOfForecasts/3 < 2.794 && totalRain/numberOfForecasts/3 >= 1.061)){
+            description = 'Light Rain';
+        }else if(totalClouds/numberOfForecasts >= 60){
+            description = 'Cloudy';
+        }else if(totalClouds/numberOfForecasts < 60 && totalClouds/numberOfForecasts >= 40){
+            description = 'Partly Cloudy';
+        }else if(totalClouds/numberOfForecasts < 40 && totalClouds/numberOfForecasts >= 20) {
+            description = 'Mostly Sunny';
+        }else{
+            description = 'Sunny'
+        }
+
+        switch (description){
+            case 'Heavy Rain':
+                weatherIcon += descriptionIcon.heavyRain + '">';
+                break;
+            case 'Rain':
+                weatherIcon += descriptionIcon.rain + '">';
+                break;
+            case 'Light Rain':
+                weatherIcon += descriptionIcon.lightRain + '">';
+                break;
+            case 'Cloudy':
+                weatherIcon += descriptionIcon.cloudy + '">';
+                break;
+            case 'Partly Cloudy':
+                weatherIcon += descriptionIcon.partlyCloudy + '">';
+                break;
+            case 'Mostly Sunny':
+                weatherIcon += descriptionIcon.mostlySunny + '">';
+                break;
+            case 'Sunny':
+                weatherIcon += descriptionIcon.sunny + '">';
+                break;
+
+        }
+
+        switch (forecastTime.getDay()){
+            case 0:
+                day = 'Sunday';
+                break;
+            case 1:
+                day = 'Monday';
+                break;
+            case 2:
+                day = 'Tuesday';
+                break;
+            case 3:
+                day = 'Wednesday';
+                break;
+            case 4:
+                day = 'Thursday';
+                break;
+            case 5:
+                day = 'Friday';
+                break;
+            case 6:
+                day = 'Saturday';
+                break;
+        }
+
+
+
+        console.log(minTemp);
+        console.log(maxTemp);
+        console.log(numberOfForecasts);
+        console.log(totalRain/numberOfForecasts);
+        console.log(totalClouds/numberOfForecasts);
+        console.log(description);
+        console.log(descriptionIcon.sunny);
+        console.log(weatherIcon);
+        console.log(day);
+
     });
 
 
